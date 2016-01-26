@@ -1,0 +1,23 @@
+{
+// Configure your Run and Preview buttons here.
+
+// Run button configuration
+  "commands": {
+        "Node version": "node --version",
+		"Start apache": "parts start apache2",
+		"Stop apache": "parts stop apache2",
+		"Restart apache": "partst restart apache2",
+		"Start mysql": "parts start mysql",
+		"Stop mysql": "parts stop mysql",
+		"Restart mysql": "parts restart mysql"
+  },
+
+// Preview button configuration
+  "preview": {
+        "Project Index (static)": "https://{{domain}}/{{index}}",
+        "Current File (static)": "https://{{domain}}/{{filepath}}",
+        "Box URL": "http://{{domain}}:3000/",
+        "Box URL SSL": "https://{{domain}}:9500/",
+		"PHPMyAdmin URL": "http://{{domain}}:3000/phpmyadmin"
+  }
+}
