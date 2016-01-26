@@ -1,0 +1,4 @@
+*.pyc
+config.ini
+.idea/
+.DS_Store

@@ -2,6 +2,7 @@
  
 #importamos el modulo socket
 import socket
+from models import Imei
  
 #instanciamos un objeto para trabajar con el socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,7 +39,9 @@ while True:
     #  for item in lista2:
     #      datos = item.strip().split(":")
     #      print datos
-
+    imei = Imei()
+    imei.set_data(lista2)
+    imei.execute_insert()
 
     #Devolvemos el mensaje al cliente
     sc.send(recibido)
