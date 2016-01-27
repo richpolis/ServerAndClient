@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from db import MysqlManager
 import datetime
 
 
-class Imei(MysqlManager):
+class Imei(object):
     sql = ""
     tabla = "tabla_"
     alerta = ""
@@ -18,7 +17,7 @@ class Imei(MysqlManager):
     otro = ""
 
     def set_data(self, lista):
-        for index in range(10):
+        for index in range(8):
             if index == 0:
                 # IMEI
                 self.tabla = self.tabla + "" + lista[index];
@@ -27,7 +26,7 @@ class Imei(MysqlManager):
                 # Alerta
                 self.alerta = lista[index];
                 print "Alerta: " + lista[index];
-            elif index >= 2:
+            elif index > 2:
                 datos = lista[index].strip().split(":")
                 datos[1] = datos[1].strip()
                 print datos[0] + ": " + datos[1]
@@ -35,7 +34,7 @@ class Imei(MysqlManager):
                     s_fecha = datos[1]
                     #  s_fecha = "" + s_fecha[4:6] + "-" + s_fecha[2:4] + "-" + s_fecha[:2]
                     #  self.fecha = datetime.datetime.strptime(s_fecha , '%d-%m-%y').date()
-                    self.fecha["year"] = s_fecha[:2]
+                    self.fecha["year"] = "20" + s_fecha[:2]
                     self.fecha["month"] = s_fecha[2:4]
                     self.fecha["day"] = s_fecha[4:6]
                 elif datos[0] == "TIME":
@@ -45,7 +44,7 @@ class Imei(MysqlManager):
                     self.tiempo["second"] = s_tiempo[4:6]
                 elif datos[0] == "LAT":
                     self.latitud = datos[1]
-                elif datos[0] == "LOG":
+                elif datos[0] == "LOT":
                     self.longitud = datos[1]
                 elif datos[0] == "Speed":
                     self.velocidad = datos[1]
@@ -55,13 +54,14 @@ class Imei(MysqlManager):
                     self.otro = datos[1]
 
     def get_query_insert(self):
-        sql = "INSERT INTO " + self.tabla + "(Alerta, \
-		Fecha_Envio, Hora_Envio, Latitud , Longitud, Velocidad, Curso, fecha_servidor, hora_servidor) \
-		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s','%s', '%s' )" % \
-                                            (self.alerta, self.get_s_fecha(), self.get_s_tiempo(), self.latitud,
-                                             self.longitud, self.velocidad, self.curso, self.get_server_fecha(),
-                                             self.get_server_tiempo())
+        sql = "INSERT INTO " + self.tabla + "(Alerta, Fecha_Envio, Hora_Envio, Latitud , Longitud, Velocidad, Curso, fecha_servidor, hora_servidor) \
+		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s','%s', '%s' )" 
         return sql
+	
+	def get_args_insert(self):
+		return (self.alerta, self.get_s_fecha(), self.get_s_tiempo(), self.latitud,
+                                             self.longitud, self.velocidad, self.curso, self.get_server_fecha(),
+                                             self.get_server_tiempo());
 
     def get_s_fecha(self):
         #  s_fecha = "20" + self.fecha["year"] + "-" + self.fecha["month"] + "-" + self.fecha["day"]
@@ -70,7 +70,7 @@ class Imei(MysqlManager):
 
     def get_s_tiempo(self):
         #  s_tiempo = "" + self.tiempo["hour"] + ":" + self.tiempo["minute"] + ":" + self.tiempo["second"]
-        t = datetime.datetime(0, 0, 0, int(self.tiempo["hour"]), int(self.tiempo["minute"]), int(self.tiempo["second"]))
+        t = datetime.time(int(self.tiempo["hour"]), int(self.tiempo["minute"]), int(self.tiempo["second"]))
         return t.strftime('%H:%M:%S')
 
     def get_server_fecha(self):
@@ -81,19 +81,4 @@ class Imei(MysqlManager):
         hoy = datetime.datetime.now()
         return hoy.strftime('%H:%M:%S')
 
-    def execute_insert(self):
-        self.conect()
-        cursor = self.get_cursor()
-        if cursor:
-            sql = self.get_query_insert()
-            try:
-                # Execute the SQL command
-                cursor.execute(sql)
-                # Commit your changes in the database
-                self.conn.commit()
-            except:
-                # Rollback in case there is any error
-                self.conn.rollback()
-            # disconnect from server
-            self.close()
-        return True
+    

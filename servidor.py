@@ -41,7 +41,7 @@ while True:
     #      print datos
     imei = Imei()
     imei.set_data(lista2)
-    imei.execute_insert()
+    print imei.get_query_insert()
 
     #Devolvemos el mensaje al cliente
     sc.send(recibido)
