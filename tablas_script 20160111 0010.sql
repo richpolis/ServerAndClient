@@ -117,12 +117,12 @@ DROP TRIGGER /*!50030 IF EXISTS */ `tabla_862894021949113_AFTER_INSERT`;
 
 DELIMITER $$
 
-CREATE DEFINER = `gv`@`%` TRIGGER `tabla_862894021949113_AFTER_INSERT` AFTER INSERT ON `tabla_862894021949113` FOR EACH ROW BEGIN 
-	IF NEW.Alerta != 'Rastreo' THEN 
-		INSERT INTO alertas 
-		(IMEI,Nombre_Dispositivo,Alerta,fecha,hora,Latitud,Longitud,id_tabla_imei,status) 
-		VALUES(NEW.IMEI,NEW.Nombre_Dispositivo,NEW.Alerta, NEW.fecha_servidor, NEW.hora_servidor, NEW.Latitud, NEW.Longitud, NEW.Id, NEW.state); 
-	END IF; 
+CREATE DEFINER = `root`@`%` TRIGGER `tabla_862894021949113_AFTER_INSERT` AFTER INSERT ON `tabla_862894021949113` FOR EACH ROW BEGIN
+	IF NEW.Alerta != 'Rastreo' THEN
+		INSERT INTO alertas
+		(IMEI,Nombre_Dispositivo,Alerta,fecha,hora,Latitud,Longitud,id_tabla_imei,status)
+		VALUES(NEW.IMEI,NEW.Nombre_Dispositivo,NEW.Alerta, NEW.fecha_servidor, NEW.hora_servidor, NEW.Latitud, NEW.Longitud, NEW.Id, NEW.state);
+	END IF;
 
 END $$
 

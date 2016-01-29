@@ -1,47 +1,45 @@
 #!/usr/bin/env python
- 
+
 #importamos el modulo socket
 import socket
 from models import Imei
- 
+from insert_imei import insert_imei
+
 #instanciamos un objeto para trabajar con el socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
- 
+
 #Con el metodo bind le indicamos que puerto debe escuchar y de que servidor esperar conexiones
 #Es mejor dejarlo en blanco para recibir conexiones externas si es nuestro caso
-s.bind(("", 9999))
- 
+s.bind(("", 9991))
+
 #Aceptamos conexiones entrantes con el metodo listen, y ademas aplicamos como parametro
 #El numero de conexiones entrantes que vamos a aceptar
 s.listen(1)
- 
-#Instanciamos un objeto sc (socket cliente) para recibir datos, al recibir datos este 
+
+#Instanciamos un objeto sc (socket cliente) para recibir datos, al recibir datos este
 #devolvera tambien un objeto que representa una tupla con los datos de conexion: IP y puerto
 sc, addr = s.accept()
- 
- 
+
+
 while True:
- 
-    #Recibimos el mensaje, con el metodo recv recibimos datos y como parametro 
+
+    #Recibimos el mensaje, con el metodo recv recibimos datos y como parametro
     #la cantidad de bytes para recibir
     recibido = sc.recv(1024)
- 
+
     #Si el mensaje recibido es la palabra close se cierra la aplicacion
     if recibido == "close":
         break
- 
+
     #Si se reciben datos nos muestra la IP y el mensaje recibido
     print str(addr[0]) + " Recibido: ", recibido
-    
-    # desfragmentar el mensaje
-    lista = recibido.split("#")
-    lista2 = lista[1].strip().split(",")
-    #  for item in lista2:
-    #      datos = item.strip().split(":")
-    #      print datos
+
+    # guardando los datos
     imei = Imei()
-    imei.set_data(lista2)
-    print imei.get_query_insert()
+    imei.set_data(recibido)
+    sql = imei.get_query_insert()
+    args = imei.get_args_insert()
+    response  = insert_imei(sql, args)
 
     #Devolvemos el mensaje al cliente
     sc.send(recibido)
@@ -49,7 +47,7 @@ while True:
 
 
 print "Adios."
- 
+
 #Cerramos la instancia del socket cliente y servidor
 sc.close()
 s.close()

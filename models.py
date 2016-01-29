@@ -11,12 +11,18 @@ class Imei(object):
     fecha = {"year": "", "month": "", "day": ""}
     tiempo = {"hour": "", "minute": "", "second": ""}
     latitud = ""
-    longitud = ""
-    velocidad = ""
+    longitud = 0.0
+    velocidad = 0.0
     curso = ""
     otro = ""
+    gsm_data = ""
+    comandos_entrada = ""
 
-    def set_data(self, lista):
+    def set_data(self, data):
+        # desfragmentar el mensaje
+        lista1 = data.split("#")
+        lista = lista1[1].strip().split(",")
+        self.comandos_entrada = data
         for index in range(8):
             if index == 0:
                 # IMEI
@@ -26,6 +32,9 @@ class Imei(object):
                 # Alerta
                 self.alerta = lista[index];
                 print "Alerta: " + lista[index];
+            elif index == 2:
+                self.gsm_data = lista[index];
+                print "GSM data: " + lista[index];
             elif index > 2:
                 datos = lista[index].strip().split(":")
                 datos[1] = datos[1].strip()
@@ -43,9 +52,10 @@ class Imei(object):
                     self.tiempo["minute"] = s_tiempo[2:4]
                     self.tiempo["second"] = s_tiempo[4:6]
                 elif datos[0] == "LAT":
-                    self.latitud = datos[1]
+                    self.latitud = float(datos[1][:-1])
                 elif datos[0] == "LOT":
-                    self.longitud = datos[1]
+                    self.longitud = float(datos[1][:-1]) - float(datos[1][:-1]) - float(datos[1][:-1])
+                    letra = datos[-1]
                 elif datos[0] == "Speed":
                     self.velocidad = datos[1]
                 elif datos[0] == "CURSE":
@@ -54,14 +64,15 @@ class Imei(object):
                     self.otro = datos[1]
 
     def get_query_insert(self):
-        sql = "INSERT INTO " + self.tabla + "(Alerta, Fecha_Envio, Hora_Envio, Latitud , Longitud, Velocidad, Curso, fecha_servidor, hora_servidor) \
-		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s','%s', '%s' )" 
+        sql = "INSERT INTO " + self.tabla + "(Alerta, Fecha_Envio, Hora_Envio, Latitud , Longitud, Velocidad, " \
+                                            "Curso, Comandos_entrada, fecha_servidor, hora_servidor) " \
+                                            "VALUES (%s, ,%s ,%s, %s, %s, %s, %s, %s,%s, %s )"
         return sql
-	
-	def get_args_insert(self):
-		return (self.alerta, self.get_s_fecha(), self.get_s_tiempo(), self.latitud,
-                                             self.longitud, self.velocidad, self.curso, self.get_server_fecha(),
-                                             self.get_server_tiempo());
+
+    def get_args_insert(self):
+        return (self.alerta, self.get_s_fecha(), self.get_s_tiempo(), self.latitud,
+                self.longitud, self.velocidad, self.curso, self.comandos_entrada,
+                self.get_server_fecha(), self.get_server_tiempo())
 
     def get_s_fecha(self):
         #  s_fecha = "20" + self.fecha["year"] + "-" + self.fecha["month"] + "-" + self.fecha["day"]
@@ -80,5 +91,3 @@ class Imei(object):
     def get_server_tiempo(self):
         hoy = datetime.datetime.now()
         return hoy.strftime('%H:%M:%S')
-
-    
