@@ -2,4 +2,5 @@
 config.ini
 .idea/
 .DS_Store
+nbproject/
 /nbproject/private/
