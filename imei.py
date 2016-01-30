@@ -65,29 +65,38 @@ class Imei(object):
 
     def get_query_insert(self):
         sql = "INSERT INTO " + self.tabla + "(Alerta, Fecha_Envio, Hora_Envio, Latitud , Longitud, Velocidad, " \
-                                            "Curso, Comandos_entrada, fecha_servidor, hora_servidor) " \
-                                            "VALUES (%s, ,%s ,%s, %s, %s, %s, %s, %s,%s, %s )"
+                                            "Comandos_entrada, fecha_servidor, hora_servidor) " \
+                                            "VALUES (%s, %s ,%s , %s, %s, %s, %s, %s, %s )"
         return sql
 
     def get_args_insert(self):
         return (self.alerta, self.get_s_fecha(), self.get_s_tiempo(), self.latitud,
-                self.longitud, self.velocidad, self.curso, self.comandos_entrada,
+                self.longitud, self.velocidad, self.comandos_entrada,
                 self.get_server_fecha(), self.get_server_tiempo())
+                
+    def get_query_insert_with_args(self):
+        sql = self.get_query_insert();
+        args = self.get_args_insert();
+        return sql % args
 
     def get_s_fecha(self):
         #  s_fecha = "20" + self.fecha["year"] + "-" + self.fecha["month"] + "-" + self.fecha["day"]
         t = datetime.datetime(int(self.fecha["year"]), int(self.fecha["month"]), int(self.fecha["day"]), 0, 0)
-        return t.strftime('%Y-%m-%d')
+        # return t.strftime('%Y-%m-%d')
+        return t
 
     def get_s_tiempo(self):
         #  s_tiempo = "" + self.tiempo["hour"] + ":" + self.tiempo["minute"] + ":" + self.tiempo["second"]
         t = datetime.time(int(self.tiempo["hour"]), int(self.tiempo["minute"]), int(self.tiempo["second"]))
-        return t.strftime('%H:%M:%S')
+        # return t.strftime('%H:%M:%S')
+        return t
 
     def get_server_fecha(self):
         hoy = datetime.datetime.now()
-        return hoy.strftime('%Y-%m-%d')
+        # return hoy.strftime('%Y-%m-%d')
+        return hoy
 
     def get_server_tiempo(self):
         hoy = datetime.datetime.now()
-        return hoy.strftime('%H:%M:%S')
+        # return hoy.strftime('%H:%M:%S')
+        return hoy

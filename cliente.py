@@ -9,7 +9,7 @@ s = socket.socket()
  
 #Nos conectamos al servidor con el metodo connect. Tiene dos parametros
 #El primero es la IP del servidor y el segundo el puerto de conexion
-s.connect(("127.0.0.1", 9991))
+s.connect(("127.0.0.1", 9999))
  
 #Creamos un bucle para retener la conexion
 while True:

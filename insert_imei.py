@@ -11,14 +11,19 @@ def insert_imei(query, args):
         cursor.execute(query, args)
 
         if cursor.lastrowid:
-            print('last insert id', cursor.lastrowid)
+            mensaje = ('Last insert id: %s' % (cursor.lastrowid,) )
+            print(mensaje)
         else:
-            print('last insert id not found')
+           mensaje = 'Last insert id not found'
 
         conn.commit()
+        
+    
     except Error as error:
         print(error)
 
     finally:
         cursor.close()
         conn.close()
+        
+    return mensaje    

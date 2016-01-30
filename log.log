@@ -1,0 +1,6 @@
+DEBUG:root:Cadena recibida: # 353327020115804, CMD-T, A, DATE: 090329, TIME: 223252, LAT: 22.7634066N, LOT: 114.3964783E, Speed: 000.0,, #
+DEBUG:root:Respuesta: Last insert id: 4
+DEBUG:root:Cadena recibida: adios
+DEBUG:root:Recibido: # 353327020115804, CMD-T, A, DATE: 090329, TIME: 223252, LAT: 22.7634066N, LOT: 114.3964783E, Speed: 000.0,, #
+DEBUG:root:Respuesta: Last insert id: 7
+2016-01-30 09:42:49.947307 Iniciando registro de errores\n2016-01-30 09:43:03.149391 Recibido: # 353327020115804, CMD-T, A, DATE: 090329, TIME: 223252, LAT: 22.7634066N, LOT: 114.3964783E, Speed: 000.0,, #\n2016-01-30 09:43:03.315572 Respuesta: Last insert id: 8\n
